@@ -361,7 +361,22 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
                 **kwargs,
             )
             output_ids = outputs['sequences']
-            response = tokenizer.decode(output_ids[0].cpu().tolist(), skip_special_tokens=True)
+
+            # Extract the list of IDs
+            all_ids = output_ids[0].cpu().tolist()
+            
+            # Get the actual limit of your tokenizer's vocabulary
+            vocab_limit = len(tokenizer) 
+            
+            # Filter out any IDs that are out of bounds (these are the mask tokens)
+            # We keep only IDs that the tokenizer actually knows how to turn into text
+            safe_ids = [i for i in all_ids if i < vocab_limit]
+            
+            # Decode only the safe IDs
+            response = tokenizer.decode(safe_ids, skip_special_tokens=True)
+            
+            # response = tokenizer.decode(output_ids[0].cpu().tolist(), skip_special_tokens=True)
+
             response = response.replace("[UNUSED_TOKEN_145]","")
             history = history + [(query, response)]
             if len(images)==1 and isinstance(images[0], str): 
