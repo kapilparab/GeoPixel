@@ -24,6 +24,7 @@ def main(args):
     os.makedirs(args.vis_save_path, exist_ok=True)
 
     print(f'initialing tokenizer from: {args.version}')
+
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         args.version,
         cache_dir=None,
@@ -31,6 +32,13 @@ def main(args):
         use_fast=False,
         trust_remote_code=True,
     )
+
+    # Add the segmentation token explicitly if it's missing
+    if "[SEG]" not in tokenizer.get_vocab():
+        tokenizer.add_tokens(["[SEG]"])
+        # Resize model embeddings to match the new tokenizer size
+        model.resize_token_embeddings(len(tokenizer))
+    
     tokenizer.pad_token = tokenizer.unk_token
     seg_token_idx, bop_token_idx, eop_token_idx = [
         tokenizer(token, add_special_tokens=False).input_ids[0] for token in ['[SEG]','<p>', '</p>']
