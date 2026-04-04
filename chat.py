@@ -36,8 +36,6 @@ def main(args):
     # Add the segmentation token explicitly if it's missing
     if "[SEG]" not in tokenizer.get_vocab():
         tokenizer.add_tokens(["[SEG]"])
-        # Resize model embeddings to match the new tokenizer size
-        model.resize_token_embeddings(len(tokenizer))
     
     tokenizer.pad_token = tokenizer.unk_token
     seg_token_idx, bop_token_idx, eop_token_idx = [
@@ -54,6 +52,7 @@ def main(args):
     
     # Load model 
     print(f'Load model from: {args.version}')
+
     model = GeoPixelForCausalLM.from_pretrained(
         args.version, 
         low_cpu_mem_usage=True, 
@@ -64,6 +63,10 @@ def main(args):
     model.config.eos_token_id = tokenizer.eos_token_id
     model.config.bos_token_id = tokenizer.bos_token_id
     model.config.pad_token_id = tokenizer.pad_token_id
+
+    # Resize model embeddings to match the new tokenizer size
+    model.resize_token_embeddings(len(tokenizer))
+    
     model.tokenizer = tokenizer
     
     model = model.bfloat16().cuda().eval()
