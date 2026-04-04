@@ -362,20 +362,22 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
             )
             output_ids = outputs['sequences']
 
-            # Extract the list of IDs
-            all_ids = output_ids[0].cpu().tolist()
+            # Instead of filtering out the IDs, replace them with a string the tokenizer can handle
+            # all_ids = output_ids[0].cpu().tolist()
+            # vocab_limit = len(tokenizer)
             
-            # Get the actual limit of your tokenizer's vocabulary
-            vocab_limit = len(tokenizer) 
+            # # Map IDs to text, but manually handle the "out of range" ones
+            # decoded_tokens = []
+            # for i in all_ids:
+            #     if i < vocab_limit:
+            #         decoded_tokens.append(tokenizer.decode([i], skip_special_tokens=True))
+            #     else:
+            #         # These are your segmentation tokens!
+            #         decoded_tokens.append("[SEG]") 
             
-            # Filter out any IDs that are out of bounds (these are the mask tokens)
-            # We keep only IDs that the tokenizer actually knows how to turn into text
-            safe_ids = [i for i in all_ids if i < vocab_limit]
+            # response = " ".join(decoded_tokens).strip()
             
-            # Decode only the safe IDs
-            response = tokenizer.decode(safe_ids, skip_special_tokens=True)
-            
-            # response = tokenizer.decode(output_ids[0].cpu().tolist(), skip_special_tokens=True)
+            response = tokenizer.decode(output_ids[0].cpu().tolist(), skip_special_tokens=True)
 
             response = response.replace("[UNUSED_TOKEN_145]","")
             history = history + [(query, response)]
