@@ -33,23 +33,20 @@ def main(args):
         trust_remote_code=True,
     )
 
-    # Add the segmentation token explicitly if it's missing
-    if "[SEG]" not in tokenizer.get_vocab():
-        tokenizer.add_tokens(["[SEG]"])
-    
     tokenizer.pad_token = tokenizer.unk_token
     seg_token_idx, bop_token_idx, eop_token_idx = [
         tokenizer(token, add_special_tokens=False).input_ids[0] for token in ['[SEG]','<p>', '</p>']
     ]
    
-    kwargs = {"torch_dtype": torch.bfloat16}    
+    kwargs = {"torch_dtype": torch.bfloat16}
+
     geo_model_args = {
         "vision_pretrained": 'facebook/sam2-hiera-large',
         "seg_token_idx" : seg_token_idx, # segmentation token index
         "bop_token_idx" : bop_token_idx, # begining of phrase token index
         "eop_token_idx" : eop_token_idx  # end of phrase token index
     }
-    
+
     # Load model 
     print(f'Load model from: {args.version}')
 
@@ -63,9 +60,6 @@ def main(args):
     model.config.eos_token_id = tokenizer.eos_token_id
     model.config.bos_token_id = tokenizer.bos_token_id
     model.config.pad_token_id = tokenizer.pad_token_id
-
-    # Resize model embeddings to match the new tokenizer size
-    model.resize_token_embeddings(len(tokenizer))
     
     model.tokenizer = tokenizer
     
