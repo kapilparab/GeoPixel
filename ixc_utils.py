@@ -33,7 +33,7 @@ def R560_HD18_Identity_transform(img, resolution=560, hd_num=18):
 
     scale_low = min(np.ceil(width * 1.5 / resolution), scale)
     scale_up = min(np.ceil(width * 1.5 / resolution), scale)
-    scale = random.randrange(scale_low, scale_up + 1)
+    scale = random.randrange(int(scale_low), int(scale_up) + 1)
 
     new_w = int(scale * resolution)
     new_h = int(new_w / ratio)
