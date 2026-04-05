@@ -14,7 +14,8 @@ from data_mix import Mix_dataset
 from deepspeed import zero
 from deepspeed.runtime.zero.partition_parameters import ZeroParamStatus
 from peft import LoraConfig, get_peft_model
-from transformers import Trainer, deepspeed
+from transformers import Trainer
+from transformers.integrations import deepspeed
 from transformers.trainer_pt_utils import LabelSmoother
 from torch.utils.tensorboard import SummaryWriter
 from transformers import TrainerCallback
