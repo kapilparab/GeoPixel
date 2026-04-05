@@ -3,11 +3,11 @@ export CUDA_DEVICE_MAX_CONNECTIONS=1
 
 DIR=`pwd`
 
-export MODEL="MBZUAI/GeoPixel-7B"
+export MODEL="MBZUAI/GeoPixel-7B-RES"
 # export DATA="path of data"
 export DATA="data.txt"
 
-GPUS_PER_NODE=4
+GPUS_PER_NODE=1
 NNODES=1
 NODE_RANK=0
 MASTER_ADDR=localhost
