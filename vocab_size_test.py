@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import transformers 
-from model.geopixel import GeoPixelForCausalL
+from model.geopixel import GeoPixelForCausalLM
 
 model_name = "MBZUAI/GeoPixel-7B"
 
@@ -40,5 +40,15 @@ model.config.pad_token_id = tokenizer.pad_token_id
 
 model.tokenizer = tokenizer
 
-print(f"Model vocab size: {model.config.vocab_size}")
+print(f"Before model vocab size: {model.config.vocab_size}")
+
+num_added_tokens = model.config.vocab_size - len(tokenizer)
+
+if num_added_tokens > 0:
+    # We add placeholder tokens for the missing range to prevent the IndexError
+    extra_tokens = [f"<extra_id_{i}>" for i in range(num_added_tokens)]
+    tokenizer.add_tokens(extra_tokens)
+    print(f"Added {num_added_tokens} missing tokens to tokenizer.")
+
+print(f"After model vocab size: {model.config.vocab_size}")
 print(f"Tokenizer vocab size: {len(tokenizer)}")
