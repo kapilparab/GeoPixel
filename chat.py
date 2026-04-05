@@ -32,14 +32,13 @@ def main(args):
         use_fast=False,
         trust_remote_code=True,
     )
-    
-    # The model has 92553 tokens, but the tokenizer only has 92544.
-    # We add exactly 9 tokens so the IDs align perfectly.
-    num_added = 92553 - len(tokenizer)
-    if num_added > 0:
-        # Adding the specific tokens GeoPixel/InternLM expects
-        special_tokens = ['[SEG]', '<p>', '</p>', '<region>', '<container>', '<object>', '<background>', '<grounding>', '<refer>']
-        tokenizer.add_tokens(special_tokens[:num_added])
+
+    added_tokens = [
+    '<p>', '</p>', '<unused_1>', '<unused_2>', 
+    '<unused_3>', '<unused_4>', '[SEG]', '<unused_5>', '<unused_6>'
+    ]
+
+    tokenizer.add_tokens(added_tokens)
 
     tokenizer.pad_token = tokenizer.unk_token
 
