@@ -32,12 +32,25 @@ def main(args):
         use_fast=False,
         trust_remote_code=True,
     )
+    
+    # The model has 92553 tokens, but the tokenizer only has 92544.
+    # We add exactly 9 tokens so the IDs align perfectly.
+    num_added = 92553 - len(tokenizer)
+    if num_added > 0:
+        # Adding the specific tokens GeoPixel/InternLM expects
+        special_tokens = ['[SEG]', '<p>', '</p>', '<region>', '<container>', '<object>', '<background>', '<grounding>', '<refer>']
+        tokenizer.add_tokens(special_tokens[:num_added])
 
     tokenizer.pad_token = tokenizer.unk_token
-    seg_token_idx, bop_token_idx, eop_token_idx = [
-        tokenizer(token, add_special_tokens=False).input_ids[0] for token in ['[SEG]','<p>', '</p>']
-    ]
-   
+
+    # seg_token_idx, bop_token_idx, eop_token_idx = [
+    #     tokenizer(token, add_special_tokens=False).input_ids[0] for token in ['[SEG]','<p>', '</p>']
+    # ]
+    
+    seg_token_idx = tokenizer.convert_tokens_to_ids('[SEG]')
+    bop_token_idx = tokenizer.convert_tokens_to_ids('<p>')
+    eop_token_idx = tokenizer.convert_tokens_to_ids('</p>')
+
     kwargs = {"torch_dtype": torch.bfloat16}
 
     geo_model_args = {
@@ -53,6 +66,7 @@ def main(args):
     model = GeoPixelForCausalLM.from_pretrained(
         args.version, 
         low_cpu_mem_usage=True, 
+        trust_remote_code=True,
         **kwargs,
         **geo_model_args
     )
@@ -61,18 +75,7 @@ def main(args):
     model.config.bos_token_id = tokenizer.bos_token_id
     model.config.pad_token_id = tokenizer.pad_token_id
     
-    print(f"Before tokenizer vocab size: {len(tokenizer)}")
-
-    num_added_tokens = model.config.vocab_size - len(tokenizer)
-
-    if num_added_tokens > 0:
-        # We add placeholder tokens for the missing range to prevent the IndexError
-        extra_tokens = [f"<extra_id_{i}>" for i in range(num_added_tokens)]
-        tokenizer.add_tokens(extra_tokens)
-        print(f"Added {num_added_tokens} missing tokens to tokenizer.")
-
-    print(f"After tokenizer vocab size: {len(tokenizer)}")
-
+    model.resize_token_embeddings(len(tokenizer))
     model.tokenizer = tokenizer
     
     model = model.bfloat16().cuda().eval()
