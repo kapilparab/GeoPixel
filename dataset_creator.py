@@ -24,26 +24,34 @@ def mask_to_rle(mask_path):
     
     return rle
 
-DATASET_BASE_PATH = "data/train"
-REFERENCE_DIR = os.path.join(DATASET_BASE_PATH, "reference")
-TARGET_DIR = os.path.join(DATASET_BASE_PATH, "target")
-TEXT_DIR = os.path.join(DATASET_BASE_PATH, "text")
+DATASET_DEST_PATH = "data/train"
+REFERENCE_DIR =  "reference"
+TARGET_DIR = "target"
+TEXT_DIR = "text"
 
-images = os.listdir(REFERENCE_DIR)
+DATASET_SOURCE_PATH = "../Capstone/dataset/polygon_224/train"
+
+# existing_images = os.listdir(REFERENCE_DIR)
+# n = len(existing_images)
 result = []
 
-for i, img in enumerate(images):
+img_list = os.listdir(os.path.join(DATASET_SOURCE_PATH, "reference"))
+print(f"Total images found: {len(img_list)}")
+
+for i, img in enumerate(img_list):
     
-    if not img.endswith(('.png', '.jpg', '.jpeg')):
-        continue
-        
+    if i == 8000:
+        break
+
     ann = {}
-    
-    img_path = os.path.join(REFERENCE_DIR, img)
+
+    img_path = os.path.join(DATASET_SOURCE_PATH, REFERENCE_DIR, img)
     img_name = img.split(".")[0]
     
-    target_path = os.path.join(TARGET_DIR, img_name + ".png")
-    text_path = os.path.join(TEXT_DIR, img_name + ".txt")
+    target_path = os.path.join(DATASET_SOURCE_PATH, TARGET_DIR, img_name + ".png")
+    text_path = os.path.join(DATASET_SOURCE_PATH, TEXT_DIR, img_name + ".txt")
+    
+    dest_img_path = os.path.join(DATASET_DEST_PATH, REFERENCE_DIR, img)
     
     # Read the text prompt
     with open(text_path, "r", encoding="utf-8") as f:
@@ -64,8 +72,8 @@ for i, img in enumerate(images):
             "value": "Sure, here is the segmentation mask for the requested area. <p> TARGET </p> [SEG] ."
         }
     ]
-    
-    ann["image"] = img_path
+
+    ann["image"] = dest_img_path
     
     ann["segmentation"] = [
         {
@@ -73,8 +81,9 @@ for i, img in enumerate(images):
             "counts": target_rle["counts"]
         }
     ]
-    
     result.append(ann)
+    
+    os.system(f"cp {img_path} {dest_img_path}")
 
 output_json_path = "data/train/dataset.json"
 with open(output_json_path, "w", encoding="utf-8") as f:
