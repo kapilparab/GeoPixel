@@ -31,7 +31,7 @@ PYTHONWARNINGS="ignore" torchrun $DISTRIBUTED_ARGS train.py \
     --fix_sampler False \
     --use_lora True \
     --hd_num 1 \
-    --num_train_epochs 3\
+    --num_train_epochs 5\
     --batch_size 2 \
     --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 1 \
@@ -39,11 +39,11 @@ PYTHONWARNINGS="ignore" torchrun $DISTRIBUTED_ARGS train.py \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
     --save_steps 400 \
-    --save_total_limit 1 \
+    --save_total_limit 5 \
     --learning_rate 3e-4 \
     --weight_decay 0.0 \
     --adam_beta2 0.95 \
-    --warmup_steps 100 \
+    --warmup_steps 200 \
     --lr_scheduler_type "cosine" \
     --logging_steps 10 \
     --logging_dir "./logs" \
