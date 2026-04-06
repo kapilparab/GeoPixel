@@ -13,10 +13,9 @@ from model.geopixel import GeoPixelForCausalLM
 # ==========================================
 BASE_MODEL = "MBZUAI/GeoPixel-7B-RES" # Set to "MBZUAI/GeoPixel-7B" if you didn't do the RES task
 LORA_PATH = "/content/drive/MyDrive/Capstone/GeoPixel/checkpoint-last"
-TEST_IMAGE_PATH = "/content/drive/MyDrive/Capstone/dataset/test/reference/GL296_169.png" 
+TEST_IMAGE_PATH = "/content/GL256_333.png"
 TEST_PROMPT = """
-Segment the TARGET in this image. 
-TARGET is an administrative[1] and municipal[7] district (raion), one of the fifty-four in the RED, GREEN. It is located in the southwest of the republic and borders BLUE in the north, YELLOW in the northeast, MAGENTA in the east, CYAN in the south, ORANGE in the southwest, and PURPLE in the west. The area of the district is 3,371 square kilometers (1,302 sq mi).[2] Its administrative center is the rural locality (a selo) of PINK.[3] As of the 2010 Census, the total population of the district was 31,444, with the population of PINK accounting for 27.6% of that number.[4]
+Can you segment the TARGET based on this description: TARGET is one of the districts of GREEN, in the historical region of BLUE. Its capital and largest city is YELLOW. Jafara borders MAGENTA in northeast, CYAN in south and ORANGE in the west.
 """
 
 VIS_SAVE_PATH = "./vis_output"
@@ -35,16 +34,13 @@ tokenizer = transformers.AutoTokenizer.from_pretrained(
 )
 
 # Adding all special tokens required by GeoPixel's chat.py
-added_tokens = [
-    '<p>', '</p>', '<unused_1>', '<unused_2>', 
-    '<unused_3>', '<unused_4>', '[SEG]', '<unused_5>', '<unused_6>'
-]
-tokenizer.add_tokens(added_tokens)
+special_tokens = ['[SEG]', '<p>', '</p>']
+tokenizer.add_tokens(special_tokens, special_tokens=True)
 tokenizer.pad_token = tokenizer.unk_token
 
-seg_token_idx = tokenizer.convert_tokens_to_ids('[SEG]')
-bop_token_idx = tokenizer.convert_tokens_to_ids('<p>')
-eop_token_idx = tokenizer.convert_tokens_to_ids('</p>')
+seg_token_idx = tokenizer("[SEG]", add_special_tokens=False).input_ids[0]
+bop_token_idx = tokenizer("<p>", add_special_tokens=False).input_ids[0]
+eop_token_idx = tokenizer("</p>", add_special_tokens=False).input_ids[0]
 
 # ==========================================
 # 3. Base Model Initialization
