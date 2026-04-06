@@ -1,1 +1,1 @@
-data/train/dataset.json 0.02
+data/train/dataset.json 1.0

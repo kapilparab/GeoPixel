@@ -31,7 +31,6 @@ PYTHONWARNINGS="ignore" torchrun $DISTRIBUTED_ARGS train.py \
     --fix_sampler False \
     --use_lora True \
     --hd_num 1 \
-    --output_dir output\
     --num_train_epochs 3\
     --batch_size 2 \
     --per_device_train_batch_size 1 \
@@ -39,7 +38,7 @@ PYTHONWARNINGS="ignore" torchrun $DISTRIBUTED_ARGS train.py \
     --gradient_accumulation_steps 10 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 100 \
+    --save_steps 400 \
     --save_total_limit 1 \
     --learning_rate 3e-4 \
     --weight_decay 0.0 \
@@ -49,6 +48,7 @@ PYTHONWARNINGS="ignore" torchrun $DISTRIBUTED_ARGS train.py \
     --logging_steps 10 \
     --logging_dir "./logs" \
     --report_to "tensorboard" \
-    --max_length 16384 \
+    --max_length 8192 \
     --deepspeed ds_config_zero2.json \
-    --gradient_checkpointing True
+    --gradient_checkpointing True \
+    --output_dir /content/drive/MyDrive/Capstone/GeoPixel

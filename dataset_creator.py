@@ -31,8 +31,8 @@ TEXT_DIR = "text"
 
 DATASET_SOURCE_PATH = "../Capstone/dataset/polygon_224/train"
 
-# existing_images = os.listdir(REFERENCE_DIR)
-# n = len(existing_images)
+GOOGLE_DRIVE_BASE_PATH = "/content/drive/MyDrive/Capstone/dataset"
+
 result = []
 
 img_list = os.listdir(os.path.join(DATASET_SOURCE_PATH, "reference"))
@@ -49,9 +49,18 @@ for i, img in enumerate(img_list):
     img_name = img.split(".")[0]
     
     target_path = os.path.join(DATASET_SOURCE_PATH, TARGET_DIR, img_name + ".png")
+    
+    if not os.path.isfile(target_path):
+        print(f"Target mask not found for {img_name}, skipping.")
+        break
+    
     text_path = os.path.join(DATASET_SOURCE_PATH, TEXT_DIR, img_name + ".txt")
     
-    dest_img_path = os.path.join(DATASET_DEST_PATH, REFERENCE_DIR, img)
+    if not os.path.isfile(text_path):
+        print(f"Text prompt not found for {img_name}, skipping.")
+        break
+    
+    dest_img_path = os.path.join(GOOGLE_DRIVE_BASE_PATH, REFERENCE_DIR, img)
     
     # Read the text prompt
     with open(text_path, "r", encoding="utf-8") as f:
@@ -82,8 +91,6 @@ for i, img in enumerate(img_list):
         }
     ]
     result.append(ann)
-    
-    os.system(f"cp {img_path} {dest_img_path}")
 
 output_json_path = "data/train/dataset.json"
 with open(output_json_path, "w", encoding="utf-8") as f:
