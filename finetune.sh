@@ -21,10 +21,6 @@ DISTRIBUTED_ARGS="
     --master_port $MASTER_PORT
 "
 
-pip install -r requirements_fixed.txt
-
-pip install deepspeed
-
 PYTHONWARNINGS="ignore" torchrun $DISTRIBUTED_ARGS train.py \
     --model_name_or_path $MODEL \
     --data_path $DATA \
