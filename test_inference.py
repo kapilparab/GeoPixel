@@ -34,13 +34,11 @@ tokenizer = transformers.AutoTokenizer.from_pretrained(
 )
 
 # Adding all special tokens required by GeoPixel's chat.py
-special_tokens = ['[SEG]', '<p>', '</p>']
+special_tokens = ['[SEG]','<p>', '</p>']
 tokenizer.add_tokens(special_tokens, special_tokens=True)
-tokenizer.pad_token = tokenizer.unk_token
-
-seg_token_idx = tokenizer("[SEG]", add_special_tokens=False).input_ids[0]
-bop_token_idx = tokenizer("<p>", add_special_tokens=False).input_ids[0]
-eop_token_idx = tokenizer("</p>", add_special_tokens=False).input_ids[0]
+seg_token_idx,bop_token_idx, eop_token_idx = [
+    tokenizer(token, add_special_tokens=False).input_ids[0] for token in special_tokens
+]
 
 # ==========================================
 # 3. Base Model Initialization
