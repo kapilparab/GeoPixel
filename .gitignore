@@ -178,4 +178,6 @@ pyrightconfig.json
 .vscode/
 .DS_Store
 data/train/target/
-data/train/text
+data/train/text/
+data/train/reference/
+data/train/*.zip

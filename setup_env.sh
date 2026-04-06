@@ -1,5 +1,7 @@
 #!/bin/bash
 
+unzip -q dataset.zip -d dataset/
+
 apt-get update
 apt-get install -y rustc cargo
 
