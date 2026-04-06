@@ -171,7 +171,7 @@ def make_supervised_data_module(
     )
 
 class CustomTrainer(Trainer):
-    def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
+    def compute_loss(self, model, inputs, return_outputs=False):
         loss, outputs = super().compute_loss(model, inputs, return_outputs=True)
         logs = {}
         if hasattr(outputs, 'ce_loss'):
