@@ -181,3 +181,5 @@ data/train/target/
 data/train/text/
 data/train/reference/
 data/train/*.zip
+geopixel_venv/
+slurm-*.out
