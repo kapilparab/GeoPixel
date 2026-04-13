@@ -51,4 +51,4 @@ PYTHONWARNINGS="ignore" torchrun $DISTRIBUTED_ARGS train.py \
     --max_length 8192 \
     --deepspeed ds_config_zero2.json \
     --gradient_checkpointing True \
-    --output_dir /home/u21/kapilparab/GeoPixel/data/results/ 
+    --output_dir ./data/results/ 
