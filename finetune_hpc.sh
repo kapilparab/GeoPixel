@@ -1,6 +1,8 @@
 #!/bin/bash
 export CUDA_DEVICE_MAX_CONNECTIONS=1
 
+export PYTHONUNBUFFERED=1
+
 DIR=`pwd`
 
 export MODEL="MBZUAI/GeoPixel-7B-RES"
