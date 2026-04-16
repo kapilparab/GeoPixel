@@ -4,7 +4,7 @@
 #SBATCH --partition=gpu_standard
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --gres=gpu:nvidia_a100_80gb_pcie_3g.40gb
+#SBATCH --gres=gpu:volta:3
 #SBATCH --mem=40gb
 #SBATCH --time=216:00:00
 #SBATCH --output=/logs/geopixel_%j.out
