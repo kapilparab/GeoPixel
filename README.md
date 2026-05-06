@@ -1,3 +1,14 @@
+# University of Arizona
+
+Files added when experimenting under [INFO 698: Capstone](https://github.com/kapilparab/Capstone-UA): 
+
+1. ```dataset_creator.py``` - Create the COCO style RLE annotation dataset.
+2. ```finetune_hpc.sh``` - Shell script to train/fine tuning on HPC.
+3. ```finetune_hpc.slurm``` - Slurm script to schedule training/fine tuning on HPC.
+4. ```save_finetuned_model.sh``` - Convert fine tuned .pt file to final model weights.
+5. ```setup_env_hpc.sh``` - Setup environment on HPC.
+6. ```setup_env.sh``` - Setup env on Google Colab/local machine.  
+
 # GeoPixel <img src="assets/logo.png" height="50">: Pixel Grounding Large Multimodal Model in Remote Sensing [ICML 2025 🔥]
 
 ![](https://i.imgur.com/waxVImv.png)
